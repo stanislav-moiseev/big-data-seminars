@@ -21,7 +21,7 @@ def local_pi(num_points: Int) {
 /* Spark version of the Pi estimation algorithm. */
 def spark_pi(num_points: Int) {
   /* Create a Spark RDD programmatically. */
-  val num_partitions = 100000
+  val num_partitions = 1000
   val tasks          = 0 until num_points
   val tasksRDD       = sc.parallelize(tasks, num_partitions)
 
