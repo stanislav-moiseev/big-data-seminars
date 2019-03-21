@@ -20,10 +20,10 @@ def local_pi(num_points: Int) {
 
 /* Spark version of the Pi estimation algorithm. */
 def spark_pi(num_points: Int) {
-  /* Create a Spark RDD programmatically. */
-  val num_partitions = 1000
-  val tasks          = 0 until num_points
-  val tasksRDD       = sc.parallelize(tasks, num_partitions)
+
+  /* Create a new RDD[Long] containing elements from 0 to 'num_points'
+   * (exclusive), increased by step 1. */
+  val tasksRDD = sc.range(0, num_points);
 
   /* The number of points placed inside the circle of radius 1. */
   val count =
