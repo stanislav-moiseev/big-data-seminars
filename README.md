@@ -4,7 +4,6 @@
 ### π estimation
 
 <pre>
-<b>cd pi-estimation/</b>
 <b>spark-shell</b>
 
 Welcome to
@@ -24,11 +23,10 @@ Welcome to
 ### Word counter
 
 <pre>
-<b>cd word-counter/</b>
 <b>spark-shell</b>
 
 <b>scala> :load word-counter.scala</b>
-<b>scala> count_words("war-and-peace", "", 10)</b>
+<b>scala> count_words("data/war-and-peace", "", 10)</b>
 
 Here are 10/53,151 most popular words starting with '':
 
@@ -49,11 +47,10 @@ Here are 10/53,151 most popular words starting with '':
 ### Connected component of a graph containing a given graph node
 
 <pre>
-<b>cd connected-component/ </b>
 <b>spark-shell</b>
 
 <b>scala> :load connected-component.scala </b>
-<b>scala> ccomp("graphs/0.txt", 16) </b>
+<b>scala> ccomp("data/graphs/0.txt", 16) </b>
 
 16 
 33 34 
