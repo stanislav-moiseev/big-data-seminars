@@ -50,7 +50,6 @@ Here are 10/53,151 most popular words starting with '':
 <b>spark-shell</b>
 
 <b>scala> :load next-word-prediction.scala </b>
-<b>scala>  </b>
 
 <b>scala> predict_word("data/war-and-peace", List("однажды"), 1)</b>
 однажды она не было что он не было что он не было что он не было ...
@@ -64,7 +63,7 @@ Here are 10/53,151 most popular words starting with '':
 <b>scala> predict_word("data/war-and-peace", List("однажды"), 4)</b>
 однажды она пришла к графине хотела что‑то сказать ей и вдруг заплакала 
 
-</pre/
+</pre>
 
 
 ### Connected component of a graph containing a given graph node
