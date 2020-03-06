@@ -20,15 +20,17 @@ def ccomp(filename: String, start_node: Node) {
    */
   val edges_rdd: RDD[(Node, Iterable[Node])] = sc
     /* Define an RDD from a text file.  The RDD will represent a sequence of all
-     * lines of text file.*/
+     * lines of text file. */
     .textFile(filename)
+
     /* Parse every text line.  The resulting RDD will represent a sequence of all
      * graph edges. */
     .flatMap(line => {
                val ints = line.split(" ").map(_.toInt)
                /* Treat all edges as undirected and insert them twice. */
                List((ints(0), ints(1)), (ints(1), ints(0)))
-             })
+    })
+
     /* Group the values for each key into a single sequence. 
      * E.g., this will transform a sequence of edges
      *   [(1,2), (2,1), (1,3), (1,4), (2,5)]
@@ -37,15 +39,15 @@ def ccomp(filename: String, start_node: Node) {
     .groupByKey
 
   /* The list of all nodes in the connected component for 'start_node'. */
-  var ccomp: List[Node]      = List()
+  var ccomp: List[Node]  = List()
   /* The list of "new" nodes. */
-  var border: Iterable[Node] = List(start_node)
+  var border: List[Node] = List(start_node)
 
   while(!border.isEmpty) {
 
     printf("%s\n", border.foldLeft("")((s, x) => s ++ x.toString ++ " "))
 
-    /* neighbors = ⋃_{u ∈ border} {v: (u,v) is an edge in G}*/
+    /* neighbors = ⋃_{u ∈ border} {v: (u,v) is an edge in G} */
     var neighbors: List[Node] = List()
 
     for(u <- border) {
@@ -53,6 +55,9 @@ def ccomp(filename: String, start_node: Node) {
        * efficiently by only searching the partition that the key 'u' maps to.
        * 
        * neighbors_u = {v: (u,v) is an edge in G}
+       * 
+       * The function 'flatten()' concatenates a sequence of sequences into
+       * sequence.
        */
       val neighbors_u = edges_rdd.lookup(u).flatten
 
