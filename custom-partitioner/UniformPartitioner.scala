@@ -2,7 +2,7 @@
  * This module implements a simple custom RDD partitioner and a function that
  * repartitions an RDD into partitions of roughly equal size.
  * 
- * @author      Moiseev Stanislav m00507424
+ * @author      Moiseev Stanislav
  * @date        March 2020
  * *****************************************************************************/
 
