@@ -1,9 +1,9 @@
-package Demo
+package SparkBasics
 
 import org.apache.spark.sql.SparkSession
 import math.random
 
-object L1_PiCalculator {
+object PiCalculator {
 
   /* Single-machine version of the Pi estimation algorithm. */
   def local_pi(num_points: Int) {

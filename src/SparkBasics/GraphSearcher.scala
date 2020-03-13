@@ -1,9 +1,9 @@
-package Demo
+package SparkBasics
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 
-object L4_GraphSearcher {
+object GraphSearcher {
 
   type Node = Int
 

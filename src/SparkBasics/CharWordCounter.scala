@@ -1,11 +1,11 @@
-package Demo
+package SparkBasics
 
 import org.apache.spark.sql.SparkSession
 
 import math.random
 import math.min
 
-object L2_CharWordCounter {
+object CharWordCounter {
 
   //---------------------------------------------------------------------------
   def count_letters(spark: SparkSession, filename: String, num: Int ) {

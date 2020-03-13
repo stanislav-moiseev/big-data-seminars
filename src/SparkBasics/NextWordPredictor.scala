@@ -1,4 +1,4 @@
-package Demo
+package SparkBasics
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd._
@@ -6,7 +6,7 @@ import org.apache.spark.rdd._
 import scala.math._
 import collection.mutable.Map
 
-object L5_NextWordPredictor {
+object NextWordPredictor {
 
   /* This function finds all subsequences of 'seq' starting with a given prefix
    * and returns the list of words coming right after the prefix.  Words may be

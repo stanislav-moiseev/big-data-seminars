@@ -6,6 +6,8 @@
  * @date        March 2020
  * *****************************************************************************/
 
+package CustomPartitioners
+
 import scala.reflect.ClassTag
 
 import org.apache.spark.Partitioner
