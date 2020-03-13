@@ -1,5 +1,8 @@
 import org.apache.spark._
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
+
+import scala.reflect.ClassTag
 
 object Test {
   private def getTimeStr(totalNano: Long): String = {
@@ -21,7 +24,7 @@ object Test {
   }
 
 
-  private def measureHashPartitionerTime[T](rdd: RDD[T], input: String) {
+  private def measureHashPartitionerTime[T]( sc: SparkContext, rdd: RDD[T], input: String) {
     val t0 = System.nanoTime()
     rdd
       .repartition(10*sc.defaultParallelism)
@@ -31,7 +34,9 @@ object Test {
     printf("HashPartitioner time: %s\n", getTimeStr(t1 - t0))
   }
 
-  private def measureRangePartitionerTime[T](rdd: RDD[T], input: String)(implicit tagT: ClassTag[T]) {
+  private def measureRangePartitionerTime[T](sc: SparkContext,
+                                             rdd: RDD[T],
+                                             input: String)(implicit tagT: ClassTag[T]) {
     val t0 = System.nanoTime()
     val rdd2 = rdd.zipWithIndex.map(_.swap)
     rdd2
@@ -43,7 +48,8 @@ object Test {
     printf("RangePartitioner time: %s\n", getTimeStr(t1 - t0))
   }
 
-  private def measureUniformPartitionerTime[T](rdd: RDD[T], input: String)(implicit tagT: ClassTag[T]) {
+  private def measureUniformPartitionerTime[T](sc: SparkContext,
+                                               rdd: RDD[T], input: String)(implicit tagT: ClassTag[T]) {
     val t0 = System.nanoTime()
     UniformPartitioner.repartition(rdd, 10*sc.defaultParallelism).count
     val t1 = System.nanoTime()
@@ -69,8 +75,8 @@ object Test {
 
     rdd.count
 
-    measureHashPartitionerTime(rdd, input)
-    measureRangePartitionerTime(rdd, input)
-    measureUniformPartitionerTime(rdd, input)
+    measureHashPartitionerTime(sc, rdd, input)
+    measureRangePartitionerTime(sc, rdd, input)
+    measureUniformPartitionerTime(sc, rdd, input)
   }
 }

@@ -48,7 +48,9 @@ object L2_CharWordCounter {
                   max_len: Int,
                   num: Int) {
 
-  val words_rdd =
+    val lines_rdd = spark.sparkContext.textFile(filename)
+
+    val words_rdd =
     lines_rdd
       .flatMap(line => line.split("[  ,;.…:–—?!«»()\\[\\]]"))   /* Map every line into a sequence of words. 
                                                                  * The regexp defines the set of separating characters.
@@ -60,7 +62,6 @@ object L2_CharWordCounter {
   /* Ask Spark to count the total number of words.  This will trigger a
    * computation. */
   val num_words = words_rdd.count
-
 
   /* Get the list of pairs (word, number_of_occurrences). */
   val stats: Array[(String, Int)] =
