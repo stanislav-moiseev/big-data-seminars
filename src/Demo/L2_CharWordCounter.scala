@@ -1,16 +1,53 @@
-import scala.math._
+package Demo
 
-def count_words(filename: String, prefix: String, num: Int) {
+import org.apache.spark.sql.SparkSession
 
-  /* Define an RDD from a text file.  This RDD will represent the text as a
-   * sequence of lines.
-   * 
-   * 'filename' could be a name of a text file or a directory with text files.
-   * In case of a directory, all files from that directory will be loaded. */
-  val lines_rdd = sc.textFile(filename)
+import math.random
+import math.min
 
+object L2_CharWordCounter {
 
-  /* Define the set of all words starting with the giving prefix. */
+  //---------------------------------------------------------------------------
+  def count_letters(spark: SparkSession, filename: String, num: Int ) {
+
+    val lines_rdd = spark.sparkContext.textFile(filename)
+
+    /* Define the set of all words starting with the giving prefix. */
+    val chars_rdd =
+      lines_rdd
+        .flatMap(line => line.toCharArray())
+        .map( char => char.toLower )
+        .filter( char => "абвгдежзийклмнопрстуфхцчшщъыьэюя ".contains(char) )
+
+    val num_chars = chars_rdd.count
+
+    /* Get the list of pairs (word, number_of_occurrences). */
+    val stats: Array[(Char, Int)] =
+      chars_rdd
+        .map( char => (char, 1))
+        .reduceByKey(_ + _)
+        .collect
+
+    printf("Here are %,d/%,d most popular characters:\n\n",
+      min(num, stats.length), stats.length )
+
+    stats
+      .sortWith(_._2 > _._2)
+      .take(num)
+      .map({ case (char, counter) => printf("%20s   => %6.2f%% (%,d / %,d)\n",
+        char, 100.0 * counter / num_chars,
+        counter, num_chars)
+      })
+  }
+
+  //---------------------------------------------------------------------------
+  def count_words(spark: SparkSession,
+                  filename: String,
+                  prefix: String,
+                  min_len: Int,
+                  max_len: Int,
+                  num: Int) {
+
   val words_rdd =
     lines_rdd
       .flatMap(line => line.split("[  ,;.…:–—?!«»()\\[\\]]"))   /* Map every line into a sequence of words. 
@@ -50,3 +87,4 @@ def count_words(filename: String, prefix: String, num: Int) {
                                          counter, num_words)})
 }
 
+}
