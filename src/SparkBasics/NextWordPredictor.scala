@@ -108,4 +108,23 @@ object NextWordPredictor {
     }
   }
 
+  def isPalindrome(w: String): Boolean = {
+    return (w == w.reverse)
+  }
+
+  def searchForPalindromes(sc: SparkContext, filename: String, min_len : Int) {
+
+    val palindromes_rdd: RDD[String] = sc
+      .textFile(filename)
+      .map(_.toLowerCase)
+      .flatMap(line => line.split("[.…?!]"))
+      .flatMap(sentence => sentence.split("[  ,;:–—«»()\\[\\]]"))
+      .filter( word => (!word.isEmpty)&&(word.length >= min_len)  )
+      .distinct()
+      .filter( word => isPalindrome(word) )
+
+    val palindrs = palindromes_rdd.collect().sorted
+    palindrs.foreach( s => println(s"$s") )
+  }
+
 }

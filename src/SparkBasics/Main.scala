@@ -6,12 +6,11 @@ import org.apache.spark.mllib.util.MLUtils
 import org.apache.spark.sql.SparkSession
 
 import scala.math.Numeric
-
 import PiCalculator.local_pi
 import PiCalculator.spark_pi
-
 import CharWordCounter.count_words
 import CharWordCounter.count_letters
+import ScalaBasics.CollectionTest
 
 object Main {
 
@@ -32,9 +31,13 @@ object Main {
      //spark_test_1()
      //spark_test_2()
      //spark_test_3()
-     spark_test_4()
+     //spark_test_4()
 
     //spark_test_5()
+
+    spark_test_6()
+
+    //CollectionTest.test_1_views()
 
   }
 
@@ -121,6 +124,15 @@ object Main {
     // Save and load model
     //model.save(sc, "target/tmp/myRandomForestClassificationModel")
     //val sameModel = RandomForestModel.load(sc, "target/tmp/myRandomForestClassificationModel")
+  }
+
+  //-------------------------------------------
+  def spark_test_6(): Unit = {
+
+    val spark = get_park_session()
+    val fname = "data/war-and-peace/*"
+    val cc = NextWordPredictor.searchForPalindromes( spark.sparkContext, fname, 3)
+
   }
 
 
