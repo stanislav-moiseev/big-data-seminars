@@ -63,6 +63,8 @@ Here are 10/53,151 most popular words starting with '':
 <b>scala> predict_word("data/war-and-peace", List("однажды"), 4)</b>
 однажды она пришла к графине хотела что‑то сказать ей и вдруг заплакала 
 
+
+
 </pre>
 
 
