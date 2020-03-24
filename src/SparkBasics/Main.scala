@@ -10,44 +10,45 @@ import PiCalculator.local_pi
 import PiCalculator.spark_pi
 import CharWordCounter.count_words
 import CharWordCounter.count_letters
+import SparkSerialization.SerializationTests
 
 object Main extends SharedSparkContext {
 
   //----------------------------------------
   def main(args: Array[String]): Unit = {
-
-     //spark_test_1()
-     //spark_test_2()
-     //spark_test_3()
-     //spark_test_4()
-    //spark_test_5()
-
-     SerializationTests.test_2( sc )
-
+//     test_1()
+//     test_2()
+//     test_3()
+//     test_4()
+       test_5()
   }
 
   //-------------------------------------------
-  def spark_test_1(): Unit = {
+  // Estimate PI-number
+  def test_1(): Unit = {
     val num_points = 1e8.toInt
     //local_pi(num_points)
     spark_pi(num_points, spark )
   }
 
   //-------------------------------------------
-  def spark_test_2(): Unit = {
+  // Count words in text file (files)
+  def test_2(): Unit = {
     val fname = "data/war-and-peace/*"
     //count_words(spark, fname, "", 20, 20,  30)
     count_letters(spark, fname, 100)
   }
 
   //-------------------------------------------
-  def spark_test_3(): Unit = {
+  // Search of connected components in graph
+  def test_3(): Unit = {
     val fname = "data/graphs/0.txt"
     val cc = GraphSearcher.ccomp(fname, spark.sparkContext, 1 )
   }
 
   //-------------------------------------------
-  def spark_test_4(): Unit = {
+  // Predict next word
+  def test_4(): Unit = {
     val fname = "data/war-and-peace/*"
     val cc = NextWordPredictor.predict_word( spark.sparkContext, fname, List("она","встала"), 2)
 
@@ -57,7 +58,8 @@ object Main extends SharedSparkContext {
   }
 
   //-------------------------------------------
-  def spark_test_5(): Unit = {
+  // Search palindromes in text files
+  def test_5(): Unit = {
     val fname = "data/war-and-peace/*"
     val cc = NextWordPredictor.searchForPalindromes( spark.sparkContext, fname, 3)
   }

@@ -1,4 +1,4 @@
-package SparkBasics
+package SparkSerialization
 
 import org.apache.spark.SparkContext
 
