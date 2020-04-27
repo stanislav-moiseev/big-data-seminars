@@ -23,8 +23,9 @@ object UniformPartitioner extends Serializable {
    * 
    * The result of this function is similar to that produced by the standard
    * Spark 'RangePartitioner' ('org.apache.spark.RangePartitioner').  A notable
-   * difference is that, unlike 'RangePartitioner' this functions guarantees the
-   * number of partitions in the resulting RDD; this function is also faster.
+   * difference is that, unlike 'RangePartitioner', this functions guarantees
+   * the number of partitions in the resulting RDD; this function is also
+   * faster.
    * 
    * @param rdd                 An RDD to be repartitioned.
    * @param numPartitions       The number of partitions in the resulting RDD. 
