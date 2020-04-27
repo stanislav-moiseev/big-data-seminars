@@ -1,6 +1,5 @@
 package MLBasics
 
-import SparkBasics.Main.get_park_session
 import org.apache.spark.SparkContext
 import org.apache.spark.mllib.tree.RandomForest
 import org.apache.spark.mllib.util.MLUtils

@@ -1,12 +1,13 @@
 package CustomPartitioners
 
+import SparkBasics.SharedSparkContext
 import org.apache.spark._
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
 
 import scala.reflect.ClassTag
+import scala.util.Random
 
-object Test {
+object Test extends SharedSparkContext{
   private def getTimeStr(totalNano: Long): String = {
     val days: Long     = totalNano / (24*60*60*1000000000L)
     val hours: Long    = totalNano / (60*60*1000000000L) - (days*24)
@@ -61,7 +62,7 @@ object Test {
 
   def main(args: Array[String]) {
     if(args.length < 1) {
-      printf("Usage: ./test INPUT\n", args(0))
+      printf("Usage: ./test INPUT\n")
       System.exit(0)
     }
 
@@ -69,7 +70,7 @@ object Test {
 
     val sc = SparkContext.getOrCreate()
     sc.setLogLevel("ERROR")
-    
+
     val rdd  = sc
       .textFile(input)
       .map(line => line.length)

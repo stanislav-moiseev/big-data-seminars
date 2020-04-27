@@ -8,3 +8,4 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "2.3.2",
   "org.apache.spark" %% "spark-mllib" % "2.3.2"
 )
+
