@@ -12,8 +12,9 @@ object CollectionTest {
     //test_2_type_spec()
     //test_3
     //test_4()
-
-    test_5()
+    // test_5()
+    //test_6()
+    test_7()
 
   }
 
@@ -69,8 +70,6 @@ object CollectionTest {
 
   }
 
-
-
   // test with arrays
   def test_5(): Unit = {
 
@@ -98,6 +97,42 @@ object CollectionTest {
 
   }
 
+  // test of maps
+  def test_6(): Unit = {
+
+    // immutable map
+    val weights = scala.collection.immutable.Map( "Andrey" -> 90, "Anna"->55, "Misha"-> 25 )
+    val w1 = weights("Misha")
+    val w2 = weights("Anna")
+    val w3 = weights.get("Vasya")
+    val weights_uc = weights.map( el => (el._1.toUpperCase, el._2) )
+
+    // mutable map
+    val heights = scala.collection.mutable.Map[String, Int]()
+    heights.put("Misha", 120 )
+    heights.put("Masha", 100 )
+    heights.put("Ilya", 110 )
+
+    heights("Masha") += 3
+
+
+    val aaa = 111
+
+  }
+
+  // example of collect function
+  def test_7() : Unit = {
+
+    val data = Range(0,10)
+    val d1 = data.filter( _ % 2 == 0 ).map( _ + 100 )
+    val d2 = data.collect( { case (el : Int) if (el % 2 == 0) => (el + 100) } )
+
+    val aaa = 111;
+
+  }
+
 
 
 }
+
+
