@@ -86,10 +86,10 @@ object NextWordPredictor {
       if(!stats.isEmpty) {
 
         // option 1 - take most probable word
-        //val next_word = stats.maxBy(_._2)._1
+//        val next_word = stats.maxBy(_._2)._1
 
         // option 2 - take random word among most probable 3 words
-        val k = 1
+        val k = 3
         val most_probable_k_word = stats.toList.sortWith(_._2 > _._2 ).take(k)
         val rand_idx = scala.util.Random.nextInt( most_probable_k_word.length )
         val next_word =  most_probable_k_word( rand_idx )._1

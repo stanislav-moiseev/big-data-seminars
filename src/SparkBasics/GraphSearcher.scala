@@ -15,6 +15,19 @@ object GraphSearcher {
    */
   def ccomp(filename: String, sc: SparkContext, start_node: Node): List[Node] = {
 
+//    val temp = 123
+//    def foo(a: Int, b:Int): Int = {
+//      a + b
+//
+//
+//      ///
+//      //
+//      //
+//      //
+//      //
+//      //
+//    }
+
     /* Define an RDD containing all graph edges in a form that supports efficient
      * look-ups of all neighboring graph nodes for a given graph nodes.
      *
@@ -25,7 +38,7 @@ object GraphSearcher {
     val edges_rdd: RDD[(Node, Iterable[Node])] = sc
       /* Define an RDD from a text file.  The RDD will represent a sequence of all
        * lines of text file.*/
-      .textFile(filename)
+      .textFile(filename, 10)
       /* Parse every text line.  The resulting RDD will represent a sequence of all
        * graph edges. */
       .flatMap(line => {

@@ -3,7 +3,7 @@ package ScalaBasics
 object CaseTest {
 
   def main(args: Array[String]): Unit = {
-    //test_1
+    test_1
     //test_2
     test_3
   }
@@ -16,7 +16,15 @@ object CaseTest {
     val m3 = new Message( "Mary", "Anna", "Fine! Thanks" )
     val r1 = (m1==m2)  // false
     val r2 = (m2==m3)  // false
-    val r4 = 111
+
+    val m4 = m1
+    val r4 = (m4 == m1)
+
+    val i_1 = 1
+    val d_1 = 1.0
+    val cmp = (i_1 == d_1)
+
+    val r5 = 111
   }
 
   // declare case class and create messages

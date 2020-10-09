@@ -30,9 +30,10 @@ object comicBook {
 }
 
 class Superhero(val name: String, val strength: Int) {
-  lazy val opponent1 = { println("lazy val initialized! "); gotham.villain }
+  lazy val opponent = gotham.villain
+
   def talk(): Unit = {
-    println(s"I won't let you win ${opponent1.name}!")
+    println(s"I won't let you win ${opponent.name}!")
   }
 
   println("Super created!!!")

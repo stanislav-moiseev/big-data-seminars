@@ -1,17 +1,24 @@
 package ScalaBasics
 
 import org.apache.commons.math3.distribution.PoissonDistribution
+import org.apache.commons.math3.distribution.UniformIntegerDistribution
+import org.apache.commons.math3.distribution.BinomialDistribution
+import org.apache.spark.util.SizeEstimator._
 
 object VariousTests {
 
 
   def main(args: Array[String]): Unit = {
 
-    test_log()
+    //test_log()
 
     //testClassConstructors()
-    // testPoisson ()
     //test_equals()
+
+    // test different distributions
+    //test_Uniform()
+    test_Poisson ()
+    //test_Bernoulli()
   }
 
   def fastlog2( x : Float): Float = {
@@ -47,23 +54,23 @@ object VariousTests {
   def testClassConstructors (): Unit = {
 
     // объявляем класс прямо внутри метода
-    class MyClass (var Name:String, var age:Int) {
+    class MyClass (private var Name:String, private var age:Int, val Name2:String ) {
       println("Constructor begins")
 
-      var field_1 = 1.0;
+      private var field_1 = 1.0;
       var field_2 = 3.0;
 
       def printName(): Unit = println(s"Name = $Name")
       def printFileds(): Unit = println(s"filed_1 = $field_1 | filed_2 = $field_2")
 
       // другой конструктор
-      def this(age:Int) = this("",age)
+      def this(age:Int) = this("",age, "no_name_2")
 
       println("Constructor ends")
     }
 
     // создаем объект класса разными конструкторами
-    val mc = new MyClass("Andrey", 36);
+    val mc = new MyClass("Andrey", 36, "12345");
     val anomymous = new MyClass( 135);
 
     mc.printName()
@@ -71,51 +78,6 @@ object VariousTests {
     val ccc = 111
 
   }
-
-  // тест распределения Пуассона
-  def testPoisson () : Unit = {
-
-    val subsample = 1.0
-    val seed  = 0
-    val numSubsamples = 1000000
-
-    val poisson = new PoissonDistribution (subsample)
-    poisson.reseedRandomGenerator (seed + 1)
-
-    val subsampleWeights = new Array[Int] (numSubsamples)
-    var subsampleIndex = 0
-    while (subsampleIndex < numSubsamples) {
-      subsampleWeights (subsampleIndex) = poisson.sample ()
-      subsampleIndex += 1
-    }
-
-    // считаем вероятности выпадения дискретных величин
-    val p_0 = subsampleWeights.count( _ == 0 ) / numSubsamples.toDouble
-    val p_1 = subsampleWeights.count( _ == 1 ) / numSubsamples.toDouble
-    val p_2 = subsampleWeights.count( _ == 2 ) / numSubsamples.toDouble
-    val p_3 = subsampleWeights.count( _ == 3 ) / numSubsamples.toDouble
-    val p_4 = subsampleWeights.count( _ == 4 ) / numSubsamples.toDouble
-    val p_5 = subsampleWeights.count( _ == 5 ) / numSubsamples.toDouble
-    val p_6 = subsampleWeights.count( _ == 6 ) / numSubsamples.toDouble
-
-    val total = subsampleWeights.sum
-
-    val aaa = 111;
-
-  }
-
-//  // тест параметризованных функций
-//  def test_generics () : Unit = {
-//
-//    def add[T] (p1:T, p2:T):T = {
-//       println( s"Parameters are: $p1" )
-//    }
-//
-//
-//  }
-
-  //  // тест параметризованных функций
-  //  def test_generics () : Unit = {
 
    // тест сравнения классов
    def test_equals () : Unit = {
@@ -150,8 +112,63 @@ object VariousTests {
      val aaa = 111;
    }
 
+  def test_Uniform(): Unit = {
 
+    class Elem( val name:String, val value:Integer )
+    case class cElem( val name:String, val value:Integer )
+    val rng = new UniformIntegerDistribution(1,10 )
+    val elements = (1 to 10).map( num => new Elem( num.toString, rng.sample() ) )
 
+    var a = new Elem("Privet", 1)
+    var b = cElem("Privet", 1)
+
+    val sa = estimate(a)
+    val sb = estimate(b)
+
+    val sum_of_odd_vals = elements.foldLeft(0)((odd_cnt, e) => odd_cnt + (e.value%2)  )
+    val aaa = 111
+
+  }
+
+  // тест распределения Пуассона
+  // subsampling (c повторениями)
+  def test_Poisson () : Unit = {
+
+    val num_rows = 100000
+
+    //val data = (1 to num_rows)
+
+    val lambda = 0.8
+    val seed  = 0
+    val poisson = new PoissonDistribution (lambda)
+    poisson.reseedRandomGenerator (seed + 1)
+
+    val subsampleWeights = (1 to num_rows).map( num => poisson.sample () )
+    val mean = subsampleWeights.sum.toDouble / num_rows.toDouble
+
+    // считаем вероятности выпадения дискретных величин
+    val bins = (0 to 9).map( r_value => subsampleWeights.count( _ == r_value )  )
+    val probs = bins.map( cnt => cnt.toDouble / num_rows.toDouble )
+
+    val aaa = 111;
+  }
+
+  // subsampling (без повторений)
+  def test_Bernoulli(): Unit = {
+
+    //val data = (1 to 1000000)
+
+    val p = 0.1
+    val seed  = 1
+    val numBits = 1000000
+    val bern = new BinomialDistribution(1, p)
+    bern.reseedRandomGenerator(seed )
+
+    val bits = (1 to numBits).map( num => bern.sample() )
+    val prob = bits.sum.toDouble / numBits.toDouble
+
+    val aaa = 111
+  }
 
 
 }

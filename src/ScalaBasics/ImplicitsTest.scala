@@ -1,16 +1,25 @@
 package ScalaBasics
 
 object ImplicitsTest {
-
   class MyInteger( val i:Int ) {
     def print = {
-      println(s"print from implicit method - $i")
+      println(s"MI1 - print from implicit method - $i")
     }
   }
 
-  object Conversions{
-    implicit def int2MyInt2(i:Int) = new MyInteger(i)
+  class MyInteger2( val i:Int ) {
+    def print = {
+      println(s"MI2 - print from implicit method - $i")
+    }
+  }
+
+  object Conversions1{
+    implicit def int2MyInt(i:Int) = new MyInteger(i)
     implicit def myInt2Int( mI:MyInteger) = mI.i
+  }
+  object Conversions2{
+    implicit def int2MyInt2(i:Int) = new MyInteger2(i)
+    implicit def myInt2Int( mI:MyInteger2) = mI.i
   }
 
   def print( i: Int ) = {
@@ -18,10 +27,12 @@ object ImplicitsTest {
   }
 
   def main(args: Array[String]): Unit = {
-
-    import Conversions._
+    import Conversions2._
 
     println("Start")
+
+    val a1 = 3
+    a1.print
 
     1.print
     7.print
@@ -29,8 +40,8 @@ object ImplicitsTest {
      print(8)
      print(9)
 
-    val b = new MyInteger(3)
-    val a: Int = b
+    //val b = new MyInteger2(3)
+    //val a: Int = b
   }
 
 }
