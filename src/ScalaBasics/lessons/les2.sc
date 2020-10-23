@@ -112,7 +112,5 @@ val y = x match {
   case _=> "other"
 }
 
-
 for (i <- Range(1,10)) {  println(i) }
-
 Range(1,10).foreach(println(_))
