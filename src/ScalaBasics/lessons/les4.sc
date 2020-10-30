@@ -1,9 +1,10 @@
+
 /*
 //------------------------------------------
 // 3. generic-классы
 class Queue[A] {
   private var elements: List[A] = Nil
-  def push(x: A) { elements = elements :: List(x) }
+  def push(x: A) { elements = elements ++ List(x) }
   def head: Option[A] = {
     if (elements.isEmpty) None
     else Some(elements.head)
@@ -16,6 +17,20 @@ class Queue[A] {
     currentHead
   }
 }
+
+//var a: Option[String] = Some("Vasya")
+//println(s" var a=$a")
+//if (a.isDefined) {
+//   println(s" var a=${a.get}")
+//}
+//
+//a = None
+//println(s" var a=$a")
+//if (a.isEmpty)
+//  println(s" no actual value in a")
+//
+//val arr = List[Int](1,2,3,4)
+//val res = arr.find( el => el > 5 )
 
 val que_i = new Queue[Int]
 que_i.push(3)
@@ -40,11 +55,15 @@ while (!que_a.head.isEmpty)
 */
 
 // Многопоточность в Scala
-
+/*
 //------------------------------------------
 // 1. extend Runnable interface
-/*
 // new class
+
+import java.util.concurrent.Callable
+
+val a = Array(1,2,3)
+
 class Task (val taskId: Int) extends Runnable  {
   override def run(): Unit = {
     val threadId = Thread.currentThread().getId
@@ -54,10 +73,21 @@ class Task (val taskId: Int) extends Runnable  {
   }
 }
 
+class TaskC (val taskId: Int) extends Callable[Int]  {
+  override def call(): Int = {
+    val threadId = Thread.currentThread().getId
+    System.out.println(s"   - task $taskId started in thread $threadId ...")
+    Thread.sleep(1000)
+    System.out.println(s"   - task $taskId finished ...")
+    taskId
+  }
+}
+
 object Program {
   def main(): Unit = {
 
-    System.out.println("main thread started ...")
+    System.out.println("main thread started ... id = " +
+      + Thread.currentThread().getId )
 
     val task_1 = new Task(123)
     task_1.run()
@@ -65,7 +95,10 @@ object Program {
     val thread_1 = new Thread( task_1 )
     thread_1.start()
 
-    thread_1.join()
+    println("Current thread = "
+      + Thread.currentThread().getId)
+
+  //  thread_1.join()
 
     System.out.println("main thread finished ...")
   }
@@ -73,7 +106,7 @@ object Program {
 
 // run the program
 Program.main()
- */
+*/
 
 /*
 //------------------------------------------
@@ -102,23 +135,24 @@ object Program {
   def main = {
     // создаем пул тредов и задачи
     val nthread = 4
-    val ntasks = 15
+    val ntasks = 10
 
     val executor = Executors.newFixedThreadPool(nthread)
     val tasks = Range(0, ntasks).map(id => new Task(id))
-    val results = tasks.map ( t => executor.submit(t) )
-
-    System.out.println ("//-------------------")
-    results.foreach( el => System.out.println (s"task - ${el.get()._1} - result - ${{el.get()._2}} ") )
+    val results = tasks.map( t => executor.submit(t) )
 
     executor.shutdown()
+
+    System.out.println ("//-------------------")
+    results.foreach(
+      el => println(s"task - ${el.get()._1} - result - ${{el.get()._2}} ") )
+
   }
 }
 
 Program.main
  */
 
-/*
 //------------------------------------------
 // 3. synchronized
 import java.util.concurrent.{Callable, Executors, Future, TimeUnit}
@@ -134,82 +168,27 @@ object Program {
   }
 
   val task_s = new java.util.concurrent.Callable[Unit] {
-    def call(): Unit = this.synchronized{
-        count = count + 1
-      }
+    def call(): Unit = {
+      this.synchronized{ count = count + 1 }
+    }
   }
 
   def main = {
     // создаем пул тредов и задачи
-    val nthread = 100
+    val nthread = 50
     val ntasks = 10000
 
     val executor = Executors.newFixedThreadPool(nthread)
     var tasksSubmited = 0
     val tasks = Range(0, ntasks).map( i => {
       tasksSubmited = tasksSubmited + 1
-      executor.submit( task_o ) } )
+      executor.submit( task_s ) } )
 
     System.out.println (s"tasksSubmited = $tasksSubmited ")
     executor.shutdown()
     executor.awaitTermination(5, TimeUnit.SECONDS)
     System.out.println (s"count = $count ")
-
   }
 }
 
 Program.main
-*/
-
-
-/*
-//------------------------------------------
-// 4. adding two arrays
-import java.util.concurrent.{Callable, Executors, Future, TimeUnit}
-import scala.util.Random
-
-object Program {
-
-  val rg = new java.util.Random()
-
-  val add_task: java.util.concurrent.Callable[Int] = (a: Int, b: Int) => { a + b }
-
-  def main = {
-
-    val maxVal = 10
-    val n = 5
-
-    val ar1 = Range(0,n).map( _ => rg.nextInt( maxVal )  )
-    val ar2 = Range(0,n).map( _ => rg.nextInt( maxVal )  )
-
-    // 1. add two vectors in single thread
-    val ar1
-    val sum1 = ar1.zip(ar2).map( p => p._1 + p._2 )
-
-    // 2. add two vectors by multiple threads
-    val nthread = 4
-    val executor = Executors.newFixedThreadPool(nthread)
-    Range(0, n).map( i => {
-      executor.submit( add_task(ar1[i], ) ) } )
-
-    System.out.println (s"tasksSubmited = $tasksSubmited ")
-    executor.shutdown()
-    executor.awaitTermination(5, TimeUnit.SECONDS)
-    System.out.println (s"count = $count ")
-
-
-
-//    ar1.foreach( el => print( el + ",") )
-//    print("\n")
-//    ar2.foreach( el => print( el + ",") )
-//    print("\n")
-//    println("--------------------------------")
-//    sum1.foreach( el => print( el + ",") )
-//    print("\n")
-
-
-  }
-}
-
-Program.main
-*/
