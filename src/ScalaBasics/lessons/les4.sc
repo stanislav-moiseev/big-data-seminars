@@ -176,7 +176,7 @@ object Program {
   def main = {
     // создаем пул тредов и задачи
     val nthread = 50
-    val ntasks = 10000
+    val ntasks = 1000
 
     val executor = Executors.newFixedThreadPool(nthread)
     var tasksSubmited = 0
