@@ -1,6 +1,5 @@
 // Multithreading in Scala/Java (cont.)
 
-/*
 //------------------------------------------
 // 1. add two arrays by multithread executor
 import java.util.concurrent.{Callable, Executors, Future, TimeUnit}
@@ -15,26 +14,56 @@ object Program {
 
   def main = {
 
+    def factorial(n: Int) = List.range(1, n+1).foldLeft(1)(_*_)
+
     val maxVal = 10
-    val k = 4  // number of threads
-    val n = 1e7.toInt
+    val n = 1e6.toInt
 
     val ar1: Array[Int] = Range(0,n).map( _ => rg.nextInt( maxVal )  ).toArray
     val ar2: Array[Int] = Range(0,n).map( _ => rg.nextInt( maxVal )  ).toArray
 
     // 1. add two vectors in single thread
     var sum1: Array[Int] = Array.fill(n)(0)
-    val (r1, t1) = profile ( {  //sum1 = ar1.zip(ar2).map( p => p._1 + p._2 )
-      Range(0, n).map ( idx => { sum1(idx) = ar1(idx) + ar2(idx) } )
+    val (r1, t1) = profile ( {
+      Range(0, n).map ( idx => { sum1(idx) = factorial(ar1(idx)) + factorial(ar2(idx)) } )
        })
-    println(s"Single thread complete in - ${t1 * 1.0e-9} seconds ")
+    println(s"1-thread complete in - ${t1 * 1.0e-9} seconds ")
 
-    // 2. add two vectors by n-tasks in k threads
+    // 2. add two vectors by 2 threads
     val sum2 = Array.fill(n)(0)
-    class Task(val from: Int, val to: Int) extends Callable[Unit] {
+    class Task(val from: Int, val to: Int) extends Runnable {
+      override def run =  {
+        try {
+          Range(from, to).map ( idx => { sum2(idx) = factorial(ar1(idx)) + factorial(ar2(idx)) } )
+        } catch {
+          case e: InterruptedException =>
+            e.printStackTrace ()
+        }
+      }
+    }
+
+    val (r2, t2) = profile ({
+      val tlen = math.floor( n / 2 ).toInt
+      val t1 = new Task(0, tlen)
+      val t2 = new Task(tlen, n)
+
+      val thread_1 = new Thread( t1 )
+      val thread_2 = new Thread( t2 )
+      thread_1.start()
+      thread_2.start()
+
+      thread_1.join()
+      thread_2.join()
+    } )
+    println(s"2-thread complete in - ${t2 * 1.0e-9} seconds ")
+
+    // 3. add two vectors by n-tasks in k threads
+    val k = 2  // number of threads
+    val sum3 = Array.fill(n)(0)
+    class TaskE(val from: Int, val to: Int) extends Callable[Unit] {
       override def call = this.synchronized {
         try {
-          Range(from, to).map ( idx => { sum2(idx) = ar1(idx) + ar2(idx) } )
+          Range(from, to).map ( idx => { sum3(idx) = factorial(ar1(idx)) + factorial(ar2(idx)) } )
         } catch {
           case e: InterruptedException =>
             e.printStackTrace ()
@@ -44,30 +73,36 @@ object Program {
 
     // определяем пул тредов и создаем задачи
     val executor = Executors.newFixedThreadPool(k)
-    val (r2, t2) = profile ({
-      val tasks_cnt = k
-      val len = math.floor( n / tasks_cnt ).toInt
-      for ( task_idx <- Range(0,tasks_cnt) ) {
-        if (task_idx < (tasks_cnt-1))
-          executor.submit(new Task( task_idx*len, (task_idx+1)*len ))
-        else
-          executor.submit(new Task( task_idx*len, n ))
-      }
-      executor.shutdown()
-      executor.awaitTermination(Long.MaxValue, TimeUnit.NANOSECONDS)
+    val (r3, t3) = profile ({
+        val tasks_cnt = k
+        val len = math.floor( n / tasks_cnt ).toInt
+        for ( task_idx <- Range(0,tasks_cnt) ) {
+          if (task_idx < (tasks_cnt-1))
+            executor.submit(new TaskE( task_idx*len, (task_idx+1)*len ))
+          else
+            executor.submit(new TaskE( task_idx*len, n ))
+        }
+        executor.shutdown()
+        executor.awaitTermination(Long.MaxValue, TimeUnit.NANOSECONDS)
     } )
-    println(s"Multi  thread complete in - ${t2 * 1.0e-9} seconds ")
+    println(s"Executor complete in - ${t3 * 1.0e-9} seconds ")
 
     // сравниваем результаты
     if (sum1.zip(sum2).filter( el => el._1 != el._2 ).size != 0)
-      println("Comparison - FAIL")
+      println("Comparison 1-2 - FAIL")
     else
-      println( "Comparison - OK" )
+      println( "Comparison 1-2 - OK" )
+
+    if (sum1.zip(sum3).filter( el => el._1 != el._2 ).size != 0)
+      println("Comparison 1-3 - FAIL")
+    else
+      println( "Comparison 1-3 - OK" )
   }
+
 }
 
 Program.main
-*/
+
 
 /*
 //------------------------------------------
@@ -137,7 +172,7 @@ object Program {
 Program.main
 */
 
-
+/*
 //------------------------------------------
 // 3. invariant/covariant inheritance
 object Program {
@@ -200,7 +235,7 @@ object Program {
 }
 
 Program.main
-
+*/
 // Notes:
 //-------------------------
 // covariant     - if A < B then F[A]<F[B]

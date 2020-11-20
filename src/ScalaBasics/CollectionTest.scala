@@ -1,7 +1,7 @@
 package ScalaBasics
 
 import scala.util.Random
-import ScalaBasics.FastArray
+//import ScalaBasics.FastArray
 import scala.collection.mutable.TreeSet
 
 object CollectionTest {
@@ -70,32 +70,32 @@ object CollectionTest {
 
   }
 
-  // test with arrays
-  def test_5(): Unit = {
-
-    val a1 = new FastArray(15)
-    a1.add(-1, 1)
-    a1.add(0, 1)
-    a1.add(15, 1)
-    a1.add(5, 1)
-
-    val a2 = new FastArray(15)
-    a2.add(0, 1)
-    a2.add(1, 1)
-    a2.add(2, 1)
-
-    a1.add(a2)
-
-    val t1 = a1.slice(0, 4)
-    val t2 = a1.data.view(0, 4).toArray
-
-    val p1 = t1.clone()
-    t1.set(0, 100)
-    p1.set(3, 33)
-
-    val aaa = 111
-
-  }
+//  // test with arrays
+//  def test_5(): Unit = {
+//
+//    val a1 = new FastArray(15)
+//    a1.add(-1, 1)
+//    a1.add(0, 1)
+//    a1.add(15, 1)
+//    a1.add(5, 1)
+//
+//    val a2 = new FastArray(15)
+//    a2.add(0, 1)
+//    a2.add(1, 1)
+//    a2.add(2, 1)
+//
+//    a1.add(a2)
+//
+//    val t1 = a1.slice(0, 4)
+//    val t2 = a1.data.view(0, 4).toArray
+//
+//    val p1 = t1.clone()
+//    t1.set(0, 100)
+//    p1.set(3, 33)
+//
+//    val aaa = 111
+//
+//  }
 
   // test of maps
   def test_6(): Unit = {
