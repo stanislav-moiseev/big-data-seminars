@@ -1,0 +1,5 @@
+package ScalaStandardLibrary
+
+class Test {
+
+}
