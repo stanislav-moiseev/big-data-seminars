@@ -47,14 +47,27 @@ object les3 {
     data.foreach( el => if (el._2 > 5) accum.add( 1 ) )
     println(s"Opt2: number of els > 5 is ${accum.value}")
 
+    // DBG:
+//    val updRdd = data.mapPartitions( it => {
+//      val partEls = it.toArray
+//      val zero = 0
+//      val test = 12 / zero
+//
+//      val newData = partEls.filter(el => el._2 > test)
+//
+//      newData.iterator
+//    })
+//    updRdd.count()
+//    println(s"Opt2: number of els > 5 is ${accum.value}")
+//
     println("BREAK POINT: press any key ...")
     val ch3 = scala.io.StdIn.readLine()
   }
 
   def test2 = {
 
-    val numPoints = 1e6.toInt
-    val numPt = 10
+    val numPoints = 100.toInt
+    val numPt = 3
     val points = sc.range(0, numPoints, 1, numPt)
     val data = points.map(el => 1).cache()
     println("Data size: " + data.count())
@@ -62,13 +75,22 @@ object les3 {
 
     // What's wrong with this code?
     var counter = 0
-    data.foreach(x => counter = counter + x)
-    //val dataLocal = data.collect()
-    //dataLocal.foreach(x => counter = counter + x)
+    val res = data.mapPartitions(it => {
+      var ptCounter = 0
+      val ptData = it.toArray
+      ptData.foreach(x => ptCounter += x)
+      counter += ptCounter
+      Array.fill(1)((ptCounter, counter)).iterator
+    })
+    res.foreach(el => println(el))
     println("Counter value: " + counter)
 
-    //println("BREAK POINT: press any key ...")
-    //val ch3 = scala.io.StdIn.readLine()
+    val dataLocal = data.collect()
+    dataLocal.foreach(x => counter = counter + x)
+    println("Counter value: " + counter)
+
+    println("BREAK POINT: press any key ...")
+    val ch3 = scala.io.StdIn.readLine()
   }
 
   def test3 = {
@@ -77,11 +99,12 @@ object les3 {
       .csv("data/ml/titanic.csv" )
 
     df.show()
-
     df.printSchema()
 
+    //val res = df.rdd.first()
+
     // Select one column
-    val c10 = df.select("Age")
+    val c10 = df.select("Age", "Name", "Fare")
     c10.show()
 
     // group by
@@ -94,5 +117,7 @@ object les3 {
     val newDf = spark.sql("select a.Name, a.Age from global_temp.titanic as a")
     newDf.show()
 
+    println("BREAK POINT: press any key ...")
+    val ch3 = scala.io.StdIn.readLine()
   }
 }
