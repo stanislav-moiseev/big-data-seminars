@@ -8,7 +8,7 @@ object les2 {
   // 1. create spark session
   val spark = SparkSession
     .builder()
-    .appName("my_first_spark_app")
+    .appName("spark_basics_2")
     .master("local")
     .getOrCreate()
 
