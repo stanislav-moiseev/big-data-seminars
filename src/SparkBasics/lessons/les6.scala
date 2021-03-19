@@ -104,18 +104,22 @@ object les6 {
 
     println("Tolstoy sentences:")
     ds1.take(3).foreach(el => println(el.mkString(" ")))
-    val ds1c = ds1.count()
+    val ds1c = ds1.count
     println(s"total: ${ds1c}")
 
     println("Pushkin sentences:")
     ds2.take(3).foreach(el => println(el.mkString(" ")))
-    val ds2c = ds2.count()
+    val ds2c = ds2.count
     println(s"total: ${ds2c}")
 
     val df1 = spark.createDataFrame(
-      ds1.zipWithIndex().map(_.swap).map(el => (el._1, el._2, 1.0))).toDF("id", "words", "label")
+      ds1.zipWithIndex()
+        .map(_.swap).map(el => (el._1, el._2, 1.0)))
+        .toDF("id", "words", "label")
     val df2 = spark.createDataFrame(
-      ds2.zipWithIndex().map(_.swap).map(el => (el._1, el._2, 0.0))).toDF("id", "words", "label")
+      ds2.zipWithIndex()
+        .map(_.swap).map(el => (el._1, el._2, 0.0)))
+        .toDF("id", "words", "label")
 
     val data = df1.union(df2)
     val splits = data.randomSplit(Array(0.7, 0.3))
