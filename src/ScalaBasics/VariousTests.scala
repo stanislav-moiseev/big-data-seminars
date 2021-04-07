@@ -17,8 +17,10 @@ object VariousTests {
 
     // test different distributions
     //test_Uniform()
-    test_Poisson()
+    //test_Poisson()
     //test_Bernoulli()
+    testInstOrder
+
   }
 
   def fastlog2(x: Float): Float = {
@@ -175,6 +177,5 @@ object VariousTests {
 
     val aaa = 111
   }
-
 
 }

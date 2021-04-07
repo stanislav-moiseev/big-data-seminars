@@ -7,6 +7,6 @@ scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "2.3.2",
-  "org.apache.spark" %% "spark-mllib" % "2.3.2"
+  "org.apache.spark" %% "spark-mllib" % "2.3.2",
+  "org.scalatest" %% "scalatest-funsuite" % "3.2.5" % "test"
 )
-

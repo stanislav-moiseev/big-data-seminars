@@ -1,5 +1,0 @@
-package ScalaStandardLibrary
-
-class Test {
-
-}
