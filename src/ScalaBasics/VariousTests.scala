@@ -18,9 +18,7 @@ object VariousTests {
     // test different distributions
     //test_Uniform()
     //test_Poisson()
-    //test_Bernoulli()
-    testInstOrder
-
+    test_Bernoulli()
   }
 
   def fastlog2(x: Float): Float = {
