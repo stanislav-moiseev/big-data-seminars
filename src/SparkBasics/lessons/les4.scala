@@ -14,7 +14,7 @@ object les4 {
   // 1. create spark session
   val spark = SparkSession
     .builder()
-    .appName("spark_basics_3")
+    .appName("spark_basics_4")
     .master("local")
     .getOrCreate()
 

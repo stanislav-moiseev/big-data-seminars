@@ -12,7 +12,7 @@ object les7 {
   // 1. create spark session
   val spark = SparkSession
     .builder()
-    .appName("spark_basics_6")
+    .appName("spark_basics_7")
     .master("local")
     .getOrCreate()
 
